@@ -55,43 +55,260 @@ def health_check():
 @app.get("/", response_class=HTMLResponse)
 def get_home():
     """Servir página principal"""
-    try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except:
-        return """
-        <html>
-            <head><title>Skynet - La Resistencia Venezolana</title></head>
-            <body style="background:#0a0e27;color:#fff;text-align:center;padding:50px;font-family:Arial">
-                <h1>🚀 Skynet - La Resistencia Venezolana</h1>
-                <p style="font-size:18px">API completamente operacional 24/7</p>
-                <hr style="border:1px solid #6C5CE7">
-                <h2>📡 Endpoints Disponibles:</h2>
-                <ul style="text-align:left;display:inline-block">
-                    <li><code>/health</code> - Status del servicio</li>
-                    <li><code>/api/auth/register</code> - Registrar usuario</li>
-                    <li><code>/api/auth/login</code> - Login</li>
-                    <li><code>/api/news</code> - Noticias de la resistencia</li>
-                    <li><code>/api/forum</code> - Foro anónimo</li>
-                    <li><code>/api/donations/stats</code> - Estadísticas de donaciones</li>
-                    <li><code>/api/leader</code> - Información del líder</li>
-                    <li><code>/api/crypto/luz</code> - Criptomoneda LUZ</li>
-                    <li><code>/api/contracts/transparency</code> - Contrato de transparencia</li>
-                </ul>
-                <hr style="border:1px solid #6C5CE7">
-                <p>🔗 <a href="/registro" style="color:#FF7A00">Ir a Registro</a></p>
-            </body>
-        </html>
-        """
+    # HTML inline - no depende de archivos del filesystem
+    return """
+    <html>
+        <head>
+            <title>Skynet - La Resistencia Venezolana</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
+                    color: #e8e8f0;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    min-height: 100vh;
+                    padding: 40px 20px;
+                }
+                .container {
+                    max-width: 900px;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+                h1 {
+                    font-size: 3em;
+                    margin-bottom: 20px;
+                    background: linear-gradient(135deg, #6C5CE7 0%, #FF7A00 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+                .status {
+                    background: rgba(108, 92, 231, 0.1);
+                    border: 1px solid #6C5CE7;
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin: 30px 0;
+                }
+                .status p {
+                    font-size: 18px;
+                    margin: 10px 0;
+                }
+                .status .badge {
+                    display: inline-block;
+                    background: #6C5CE7;
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-weight: bold;
+                    margin: 5px;
+                }
+                .endpoints {
+                    background: rgba(18, 18, 26, 0.5);
+                    border: 1px solid rgba(108, 92, 231, 0.3);
+                    border-radius: 12px;
+                    padding: 30px;
+                    margin: 30px 0;
+                    text-align: left;
+                }
+                .endpoints h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    color: #FF7A00;
+                }
+                .endpoints ul {
+                    list-style: none;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 15px;
+                }
+                .endpoints li {
+                    background: rgba(255, 255, 255, 0.05);
+                    padding: 12px;
+                    border-radius: 8px;
+                    border-left: 3px solid #6C5CE7;
+                }
+                code {
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    color: #FF7A00;
+                    font-weight: bold;
+                }
+                .cta {
+                    margin-top: 40px;
+                }
+                .button {
+                    display: inline-block;
+                    background: linear-gradient(135deg, #6C5CE7 0%, #FF7A00 100%);
+                    color: white;
+                    padding: 12px 30px;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    margin: 10px;
+                    transition: transform 0.3s;
+                }
+                .button:hover {
+                    transform: scale(1.05);
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🚀 Skynet</h1>
+                <h2 style="color:#6C5CE7; margin-bottom:30px">La Resistencia Venezolana</h2>
+
+                <div class="status">
+                    <p><span class="badge">✅ LIVE</span></p>
+                    <p>API completamente operacional 24/7</p>
+                    <p style="font-size:14px; margin-top:15px; color:#aaa">Servidor en Render • Base de datos SQLite • Contratos Ethereum</p>
+                </div>
+
+                <div class="endpoints">
+                    <h2>📡 Endpoints API Disponibles</h2>
+                    <ul>
+                        <li><code>GET /health</code> - Status del servicio</li>
+                        <li><code>POST /api/auth/register</code> - Registrar usuario</li>
+                        <li><code>POST /api/auth/login</code> - Login</li>
+                        <li><code>GET /api/news</code> - Noticias de la resistencia</li>
+                        <li><code>POST /api/news</code> - Crear noticia</li>
+                        <li><code>GET /api/forum</code> - Posts del foro anónimo</li>
+                        <li><code>POST /api/forum</code> - Crear post anónimo</li>
+                        <li><code>GET /api/donations/stats</code> - Estadísticas de donaciones</li>
+                        <li><code>POST /api/donations/create</code> - Crear donación</li>
+                        <li><code>GET /api/leader</code> - Información del líder</li>
+                        <li><code>PUT /api/leader</code> - Actualizar líder</li>
+                        <li><code>GET /api/trader/sim</code> - Simulación de trading</li>
+                        <li><code>GET /api/crypto/luz</code> - Info cripto LUZ</li>
+                        <li><code>GET /api/contracts/transparency</code> - Smart contracts</li>
+                    </ul>
+                </div>
+
+                <div class="cta">
+                    <a href="/registro" class="button">Ir a Registro</a>
+                </div>
+            </div>
+        </body>
+    </html>
+    """
 
 @app.get("/registro", response_class=HTMLResponse)
 def get_registro():
     """Servir página de registro"""
-    try:
-        with open("registro.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except:
-        return "<h1>Página de registro no disponible</h1>"
+    return """
+    <html>
+        <head>
+            <title>Skynet - Registro</title>
+            <meta charset="utf-8">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
+                    color: #e8e8f0;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }
+                .container {
+                    background: rgba(18, 18, 26, 0.8);
+                    border: 1px solid rgba(108, 92, 231, 0.3);
+                    border-radius: 12px;
+                    padding: 40px;
+                    max-width: 500px;
+                    width: 100%;
+                    backdrop-filter: blur(10px);
+                }
+                h1 {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    color: #FF7A00;
+                }
+                .form-group {
+                    margin-bottom: 20px;
+                }
+                label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                    color: #e8e8f0;
+                }
+                input {
+                    width: 100%;
+                    padding: 12px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(108, 92, 231, 0.3);
+                    border-radius: 8px;
+                    color: #e8e8f0;
+                    font-size: 16px;
+                    transition: border-color 0.3s;
+                }
+                input:focus {
+                    outline: none;
+                    border-color: #6C5CE7;
+                    box-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+                }
+                button {
+                    width: 100%;
+                    padding: 12px;
+                    background: linear-gradient(135deg, #6C5CE7 0%, #FF7A00 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: transform 0.3s;
+                }
+                button:hover {
+                    transform: scale(1.02);
+                }
+                .back {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                .back a {
+                    color: #6C5CE7;
+                    text-decoration: none;
+                }
+                .back a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🚀 Registro Skynet</h1>
+                <form>
+                    <div class="form-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedula">Cédula</label>
+                        <input type="text" id="cedula" name="cedula" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Registrarse</button>
+                </form>
+                <div class="back">
+                    <a href="/">← Volver al inicio</a>
+                </div>
+            </div>
+        </body>
+    </html>
+    """
 
 # ===== AUTH ENDPOINTS =====
 @app.post("/api/auth/register")
