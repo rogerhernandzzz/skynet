@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from datetime import datetime
 import os
@@ -49,6 +50,48 @@ def health_check():
         "timestamp": datetime.now().isoformat(),
         "service": "Skynet API"
     }
+
+# ===== SERVE HOME PAGE =====
+@app.get("/", response_class=HTMLResponse)
+def get_home():
+    """Servir página principal"""
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except:
+        return """
+        <html>
+            <head><title>Skynet - La Resistencia Venezolana</title></head>
+            <body style="background:#0a0e27;color:#fff;text-align:center;padding:50px;font-family:Arial">
+                <h1>🚀 Skynet - La Resistencia Venezolana</h1>
+                <p style="font-size:18px">API completamente operacional 24/7</p>
+                <hr style="border:1px solid #6C5CE7">
+                <h2>📡 Endpoints Disponibles:</h2>
+                <ul style="text-align:left;display:inline-block">
+                    <li><code>/health</code> - Status del servicio</li>
+                    <li><code>/api/auth/register</code> - Registrar usuario</li>
+                    <li><code>/api/auth/login</code> - Login</li>
+                    <li><code>/api/news</code> - Noticias de la resistencia</li>
+                    <li><code>/api/forum</code> - Foro anónimo</li>
+                    <li><code>/api/donations/stats</code> - Estadísticas de donaciones</li>
+                    <li><code>/api/leader</code> - Información del líder</li>
+                    <li><code>/api/crypto/luz</code> - Criptomoneda LUZ</li>
+                    <li><code>/api/contracts/transparency</code> - Contrato de transparencia</li>
+                </ul>
+                <hr style="border:1px solid #6C5CE7">
+                <p>🔗 <a href="/registro" style="color:#FF7A00">Ir a Registro</a></p>
+            </body>
+        </html>
+        """
+
+@app.get("/registro", response_class=HTMLResponse)
+def get_registro():
+    """Servir página de registro"""
+    try:
+        with open("registro.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except:
+        return "<h1>Página de registro no disponible</h1>"
 
 # ===== AUTH ENDPOINTS =====
 @app.post("/api/auth/register")
