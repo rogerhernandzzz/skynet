@@ -30,8 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Servir archivos estáticos
-app.mount("/static", StaticFiles(directory="frontend/public"), name="static")
+# Servir archivos estáticos (desde raíz donde están HTML y CSS)
+try:
+    app.mount("/static", StaticFiles(directory="."), name="static")
+except:
+    pass  # No montamos si no existen archivos
 
 # Dependency para DB
 def get_db():
