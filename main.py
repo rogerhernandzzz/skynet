@@ -601,7 +601,7 @@ def get_home():
         <div class="radial-menu-wrapper">
             <div class="center-circle"></div>
             <div class="radial-center">
-                <div class="center-logo">🚀 SKYNET</div>
+                <div class="center-logo">SKYNET</div>
                 <div class="center-subtitle">La Resistencia</div>
             </div>
 
