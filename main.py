@@ -389,6 +389,30 @@ body {
     margin-top: 1rem;
 }
 
+.panel-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.panel-option {
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--white-100);
+    font-family: 'Space Mono', monospace;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.panel-option:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: var(--accent-red);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+}
+
 .submit-btn:hover {
     background: var(--accent-red);
     border-color: var(--accent-red);
@@ -568,8 +592,10 @@ def get_home():
 
         <div class="auth-panel" id="authPanel">
             <a href="/admin" class="auth-button" style="text-decoration: none;">⚙️ Admin</a>
-            <button class="auth-button" onclick="openRegistro()">Registro</button>
-            <button class="auth-button" onclick="openIngresar()">Ingresar</button>
+            <button class="auth-button" id="panelBtn" onclick="openPanelUsuario()" style="display:none;">👤 Panel</button>
+            <button class="auth-button" id="regBtn" onclick="openRegistro()">Registro</button>
+            <button class="auth-button" id="ingBtn" onclick="openIngresar()">Ingresar</button>
+            <button class="auth-button" id="logoutBtn" onclick="logout()" style="display:none;">Salir</button>
         </div>
 
         <!-- MODALS -->
@@ -605,8 +631,8 @@ def get_home():
                 <div class="modal-title">⚡ INGRESAR</div>
                 <form onsubmit="return handleIngresar(event)">
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="ingEmail" placeholder="tu@email.com" required>
+                        <label>Pseudónimo</label>
+                        <input type="text" id="ingPseudonym" placeholder="tu_pseudónimo" required>
                     </div>
                     <div class="form-group">
                         <label>Contraseña</label>
@@ -614,6 +640,34 @@ def get_home():
                     </div>
                     <button type="submit" class="submit-btn">Ingresar</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- PANEL DE USUARIO MODAL -->
+        <div class="modal" id="panelUsuarioModal">
+            <div class="modal-card" style="max-width: 500px;">
+                <button class="close-modal" onclick="closePanelUsuario()">✕</button>
+                <div class="modal-title">👤 MI PANEL</div>
+                <div id="userInfo" style="margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,.1); color: var(--white-80);">
+                    Bienvenido, <span id="userPseudo" style="color: var(--accent-red);">Usuario</span>
+                </div>
+                <div class="panel-options">
+                    <button class="panel-option" onclick="openCriptoModal()">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💰</div>
+                        <div style="font-weight: bold;">Comprar Criptomoneda Luz</div>
+                        <div style="font-size: 0.8rem; color: var(--white-60);">Adquiere LUZ directamente</div>
+                    </button>
+                    <button class="panel-option" onclick="openBuzonModal()">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📬</div>
+                        <div style="font-weight: bold;">Buzón de Mensajes</div>
+                        <div style="font-size: 0.8rem; color: var(--white-60);">Lee tus mensajes (0 nuevos)</div>
+                    </button>
+                    <button class="panel-option" onclick="openTraderModal()">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📈</div>
+                        <div style="font-weight: bold;">Inversión en Trader Bot</div>
+                        <div style="font-size: 0.8rem; color: var(--white-60);">Rentabilidad automática 24/7</div>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -669,25 +723,6 @@ def get_home():
         </div>
 
         <script>
-            function updateAuthPanel() {{
-                const username = localStorage.getItem('username');
-                const authPanel = document.getElementById('authPanel');
-
-                if (username) {{
-                    authPanel.innerHTML = `
-                        <div class="user-display">
-                            <span class="user-alias">\${{username}}</span>
-                            <button class="logout-btn" onclick="logout()">✕</button>
-                        </div>
-                    `;
-                }} else {{
-                    authPanel.innerHTML = `
-                        <button class="auth-button" onclick="openRegistro()">Registro</button>
-                        <button class="auth-button" onclick="openIngresar()">Ingresar</button>
-                    `;
-                }}
-            }}
-
             function openRegistro() {{
                 document.getElementById('registroModal').classList.add('active');
             }}
@@ -716,17 +751,64 @@ def get_home():
 
             function handleIngresar(event) {{
                 event.preventDefault();
-                const email = document.getElementById('ingEmail').value;
-                localStorage.setItem('username', email.split('@')[0]);
-                alert('✅ Ingreso exitoso');
-                closeIngresar();
-                updateAuthPanel();
+                const pseudonym = document.getElementById('ingPseudonym').value;
+                const password = document.getElementById('ingPassword').value;
+                if(pseudonym && password) {{
+                    localStorage.setItem('username', pseudonym);
+                    alert('✅ Ingreso exitoso');
+                    closeIngresar();
+                    updateAuthPanel();
+                }} else {{
+                    alert('❌ Complete los campos');
+                }}
                 return false;
             }}
 
             function logout() {{
                 localStorage.removeItem('username');
+                closePanelUsuario();
                 updateAuthPanel();
+            }}
+
+            function updateAuthPanel() {{
+                const username = localStorage.getItem('username');
+                const panelBtn = document.getElementById('panelBtn');
+                const regBtn = document.getElementById('regBtn');
+                const ingBtn = document.getElementById('ingBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+
+                if(username) {{
+                    panelBtn.style.display = 'inline-block';
+                    logoutBtn.style.display = 'inline-block';
+                    regBtn.style.display = 'none';
+                    ingBtn.style.display = 'none';
+                    document.getElementById('userPseudo').textContent = username;
+                }} else {{
+                    panelBtn.style.display = 'none';
+                    logoutBtn.style.display = 'none';
+                    regBtn.style.display = 'inline-block';
+                    ingBtn.style.display = 'inline-block';
+                }}
+            }}
+
+            function openPanelUsuario() {{
+                document.getElementById('panelUsuarioModal').style.display = 'flex';
+            }}
+
+            function closePanelUsuario() {{
+                document.getElementById('panelUsuarioModal').style.display = 'none';
+            }}
+
+            function openCriptoModal() {{
+                alert('💰 Compra de Criptomoneda Luz\n\nEn desarrollo...');
+            }}
+
+            function openBuzonModal() {{
+                alert('📬 Buzón de Mensajes\n\nNo tienes mensajes nuevos');
+            }}
+
+            function openTraderModal() {{
+                alert('📈 Inversión en Trader Bot\n\nRentabilidad: 12% mensual\n(En desarrollo...)');
             }}
 
             updateAuthPanel();
@@ -1028,6 +1110,9 @@ def get_admin():
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }}
+
+        // Inicializar panel de auth al cargar
+        updateAuthPanel();
         </script>
     </body>
     </html>
