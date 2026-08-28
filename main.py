@@ -754,10 +754,34 @@ def get_home():
             function handleRegistro(event) {{
                 event.preventDefault();
                 const username = document.getElementById('regUsername').value;
-                localStorage.setItem('username', username);
-                alert('✅ Bienvenido: ' + username);
-                closeRegistro();
-                updateAuthPanel();
+                const email = document.getElementById('regEmail').value;
+                const cedula = document.getElementById('regCedula').value;
+                const password = document.getElementById('regPassword').value;
+
+                // Llamar a API
+                fetch('/api/auth/register', {{
+                    method: 'POST',
+                    headers: {{'Content-Type': 'application/x-www-form-urlencoded'}},
+                    body: `username=${{encodeURIComponent(username)}}&email=${{encodeURIComponent(email)}}&cedula=${{encodeURIComponent(cedula)}}&password=${{encodeURIComponent(password)}}`
+                }})
+                .then(r => r.json())
+                .then(data => {{
+                    if(data.success) {{
+                        localStorage.setItem('username', username);
+                        localStorage.setItem('token', data.token || 'jwt_token');
+                        alert('✅ Registro exitoso. ¡Bienvenido ' + username + '!');
+                        document.getElementById('regUsername').value = '';
+                        document.getElementById('regEmail').value = '';
+                        document.getElementById('regCedula').value = '';
+                        document.getElementById('regPassword').value = '';
+                        closeRegistro();
+                        updateAuthPanel();
+                    }} else {{
+                        alert('❌ Error: ' + (data.message || 'No se pudo registrar'));
+                    }}
+                }})
+                .catch(err => alert('❌ Error: ' + err.message));
+
                 return false;
             }}
 
@@ -765,14 +789,34 @@ def get_home():
                 event.preventDefault();
                 const pseudonym = document.getElementById('ingPseudonym').value;
                 const password = document.getElementById('ingPassword').value;
-                if(pseudonym && password) {{
-                    localStorage.setItem('username', pseudonym);
-                    alert('✅ Ingreso exitoso');
-                    closeIngresar();
-                    updateAuthPanel();
-                }} else {{
-                    alert('❌ Complete los campos');
+
+                if(!pseudonym || !password) {{
+                    alert('❌ Complete todos los campos');
+                    return false;
                 }}
+
+                // Llamar a API (usando email como pseudonym para login)
+                fetch('/api/auth/login', {{
+                    method: 'POST',
+                    headers: {{'Content-Type': 'application/x-www-form-urlencoded'}},
+                    body: `email=${{encodeURIComponent(pseudonym)}}&password=${{encodeURIComponent(password)}}`
+                }})
+                .then(r => r.json())
+                .then(data => {{
+                    if(data.success) {{
+                        localStorage.setItem('username', pseudonym);
+                        localStorage.setItem('token', data.token || 'jwt_token');
+                        alert('✅ Ingreso exitoso. ¡Hola ' + pseudonym + '!');
+                        document.getElementById('ingPseudonym').value = '';
+                        document.getElementById('ingPassword').value = '';
+                        closeIngresar();
+                        updateAuthPanel();
+                    }} else {{
+                        alert('❌ Error: ' + (data.message || 'Credenciales inválidas'));
+                    }}
+                }})
+                .catch(err => alert('❌ Error: ' + err.message));
+
                 return false;
             }}
 
@@ -970,11 +1014,40 @@ def get_ia():
 # ===== API ENDPOINTS =====
 @app.post("/api/auth/register")
 def register(username: str, email: str, password: str, cedula: str):
-    return {"success": True, "message": "Registro completado"}
+    """Registro de nuevo usuario"""
+    if not username or not email or not password or not cedula:
+        return {"success": False, "message": "Todos los campos son requeridos"}
+
+    if len(password) < 8:
+        return {"success": False, "message": "La contraseña debe tener mínimo 8 caracteres"}
+
+    # En versión futura, guardaría en BD y hashearía password
+    # Por ahora, retorna token simulado
+    token = f"token_{username}_{datetime.now().timestamp()}"
+
+    return {
+        "success": True,
+        "message": "Registro completado exitosamente",
+        "token": token,
+        "user": {"username": username, "email": email}
+    }
 
 @app.post("/api/auth/login")
 def login(email: str, password: str):
-    return {"success": True, "token": "jwt_token"}
+    """Inicio de sesión"""
+    if not email or not password:
+        return {"success": False, "message": "Email y contraseña requeridos"}
+
+    # En versión futura, verificaría contra BD
+    # Por ahora, acepta cualquier credencial
+    token = f"token_{email}_{datetime.now().timestamp()}"
+
+    return {
+        "success": True,
+        "message": "Ingreso exitoso",
+        "token": token,
+        "user": {"email": email}
+    }
 
 @app.get("/api/news")
 def get_news():
