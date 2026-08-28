@@ -825,9 +825,10 @@ def get_home():
 
             updateAuthPanel();
 
-            document.addEventListener('click', (e) => {{
+            document.addEventListener('click', function(e) {{
                 if (e.target.id === 'registroModal') closeRegistro();
                 if (e.target.id === 'ingresarModal') closeIngresar();
+                if (e.target.id === 'panelUsuarioModal') closePanelUsuario();
             }});
         </script>
     </body>
