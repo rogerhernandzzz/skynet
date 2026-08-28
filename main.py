@@ -13,7 +13,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,7 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ===== HEALTH CHECK =====
 @app.get("/health")
 def health_check():
     return {
@@ -32,21 +30,18 @@ def health_check():
         "version": "1.0.0"
     }
 
-# ===== CSS INSPIRED BY SPACEX =====
-CSS_SPACEX = """
+# ===== CSS RADIAL MENU =====
+CSS_RADIAL = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
 :root {
     --black: #000000;
     --white-100: #f0f0fa;
-    --white-90: rgba(240, 240, 250, 0.9);
     --white-80: rgba(240, 240, 250, 0.8);
     --white-60: rgba(240, 240, 250, 0.6);
     --white-30: rgba(240, 240, 250, 0.3);
-    --white-15: rgba(240, 240, 250, 0.15);
-    --gray-80: rgba(37, 38, 40, 0.8);
-    --gray-60: rgba(37, 38, 40, 0.6);
-    --accent: #ffffff;
+    --accent-red: #ff0000;
+    --accent-cyan: #00ffff;
 }
 
 * {
@@ -55,738 +50,330 @@ CSS_SPACEX = """
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+html, body {
+    width: 100%;
+    height: 100%;
 }
 
 body {
     font-family: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--black);
+    background: radial-gradient(circle at center, #0a0a1a 0%, #000000 50%, #000000 100%);
     color: var(--white-100);
-    line-height: 1.6;
-    overflow-x: hidden;
-}
-
-/* ===== NAVBAR ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--white-15);
-    z-index: 1000;
-    padding: 1.5rem 0;
-}
-
-.nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--white-100);
-    text-transform: uppercase;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 4rem;
-    align-items: center;
-}
-
-.nav-menu a {
-    color: var(--white-80);
-    text-decoration: none;
-    font-size: 0.875rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: color 0.3s ease;
-    font-family: 'Space Mono', monospace;
-}
-
-.nav-menu a:hover {
-    color: var(--white-100);
-}
-
-.nav-menu a::after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 1px;
-    background: var(--white-100);
-    transition: width 0.3s ease;
-    margin-top: 4px;
-}
-
-.nav-menu a:hover::after {
-    width: 100%;
-}
-
-/* ===== HERO SECTION ===== */
-.hero {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     overflow: hidden;
-    margin-top: 60px;
-    padding: 0 3rem;
-    background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
-}
-
-.hero-content {
-    flex: 1;
-    z-index: 2;
-    max-width: 600px;
-}
-
-.hero-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(3.5rem, 8vw, 5.5rem);
-    font-weight: 800;
-    letter-spacing: -2px;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    animation: slideInLeft 0.8s ease-out;
-}
-
-.hero-subtitle {
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
-    color: var(--white-80);
-    margin-bottom: 3rem;
-    letter-spacing: 0.5px;
-    animation: slideInLeft 0.8s ease-out 0.2s backwards;
-    line-height: 1.6;
-}
-
-.hero-cta-group {
-    display: flex;
-    gap: 2rem;
-    animation: slideInLeft 0.8s ease-out 0.4s backwards;
-    flex-wrap: wrap;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.5rem;
-    border: 1px solid var(--white-100);
-    background: transparent;
-    color: var(--white-100);
-    text-decoration: none;
-    font-size: 0.875rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-family: 'Space Mono', monospace;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-}
-
-.btn:hover {
-    background: var(--white-100);
-    color: var(--black);
-    transform: translateY(-2px);
-}
-
-.btn-primary {
-    background: var(--white-100);
-    color: var(--black);
-}
-
-.btn-primary:hover {
-    background: var(--white-80);
-}
-
-.hero-image {
-    flex: 1;
-    z-index: 1;
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
-.hero-visual {
+/* ===== RADIAL MENU CONTAINER ===== */
+.radial-menu-wrapper {
+    position: relative;
+    width: 100vmin;
+    height: 100vmin;
+    max-width: 100vh;
+    max-height: 100vh;
+}
+
+.radial-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+}
+
+.center-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2rem, 8vmin, 4rem);
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+    animation: logoGlow 3s ease-in-out infinite;
+}
+
+.center-subtitle {
+    font-size: clamp(0.8rem, 2vmin, 1.2rem);
+    color: var(--white-60);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.center-circle {
+    position: absolute;
+    width: clamp(80px, 15vmin, 200px);
+    height: clamp(80px, 15vmin, 200px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--white-30);
+    border-radius: 50%;
+    z-index: 5;
+    animation: rotateBorder 20s linear infinite;
+}
+
+.center-circle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+}
+
+/* ===== RADIAL MENU ITEMS ===== */
+.radial-menu {
+    position: absolute;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8rem;
-    animation: fadeInRight 0.8s ease-out;
+    top: 0;
+    left: 0;
 }
 
-.scroll-indicator {
+.menu-item {
     position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: clamp(60px, 12vmin, 140px);
+    height: clamp(60px, 12vmin, 140px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    animation: bounce 2s infinite;
-}
-
-.scroll-indicator span {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--white-60);
-}
-
-.scroll-arrow {
-    width: 1px;
-    height: 30px;
-    background: var(--white-60);
-}
-
-/* ===== SECTION CONTAINER ===== */
-section {
-    padding: 6rem 3rem;
-    position: relative;
-}
-
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 5rem;
-}
-
-.section-header h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 1rem;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.section-header p {
-    font-size: 1.125rem;
-    color: var(--white-80);
-    letter-spacing: 0.5px;
-    animation: fadeInUp 0.8s ease-out 0.1s backwards;
-}
-
-/* ===== RESISTENCIA SECTION ===== */
-.resistencia {
-    background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
-    border-top: 1px solid var(--white-15);
-}
-
-.resistencia-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2.5rem;
-}
-
-.resistencia-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--white-15);
-    padding: 3rem 2rem;
-    text-align: center;
+    justify-content: center;
+    cursor: pointer;
     transition: all 0.3s ease;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.resistencia-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--white-100);
-    transform: translateY(-5px);
-}
-
-.card-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1.5rem;
-    display: inline-block;
-}
-
-.resistencia-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    letter-spacing: 0.5px;
-}
-
-.resistencia-card p {
-    color: var(--white-80);
-    font-size: 0.95rem;
-    line-height: 1.7;
-}
-
-/* ===== DONACIONES SECTION ===== */
-.donaciones {
-    background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
-    border-top: 1px solid var(--white-15);
-}
-
-.donaciones-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2.5rem;
-}
-
-.donacion-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--white-15);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.donacion-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--white-100);
-    transform: translateY(-5px);
-}
-
-.donacion-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-}
-
-.donacion-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.donacion-card p {
-    color: var(--white-80);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-}
-
-/* ===== LUZ SECTION ===== */
-.luz-crypto {
-    background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
-    border-top: 1px solid var(--white-15);
-    border-bottom: 1px solid var(--white-15);
-}
-
-.luz-info {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.luz-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-
-.stat-box {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--white-15);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.stat-box:hover {
-    border-color: var(--white-100);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.stat-number {
-    display: block;
-    font-family: 'Space Mono', monospace;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    text-decoration: none;
     color: var(--white-100);
 }
 
-.stat-label {
+.menu-item:nth-child(1) { --angle: 0deg; }
+.menu-item:nth-child(2) { --angle: 45deg; }
+.menu-item:nth-child(3) { --angle: 90deg; }
+.menu-item:nth-child(4) { --angle: 135deg; }
+.menu-item:nth-child(5) { --angle: 180deg; }
+.menu-item:nth-child(6) { --angle: 225deg; }
+.menu-item:nth-child(7) { --angle: 270deg; }
+.menu-item:nth-child(8) { --angle: 315deg; }
+
+.menu-item {
+    --radius: clamp(120px, 35vmin, 400px);
+    top: 50%;
+    left: 50%;
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--angle))
+        translateY(calc(var(--radius) * -1))
+        rotate(calc(var(--angle) * -1));
+}
+
+.item-icon {
+    font-size: clamp(1.5rem, 4vmin, 3rem);
+    margin-bottom: 0.5rem;
     display: block;
-    font-size: 0.875rem;
-    color: var(--white-80);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.3));
+}
+
+.item-label {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.6rem, 1.5vmin, 0.9rem);
     letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
-.luz-description {
-    text-align: center;
-    margin: 3rem 0;
+.item-circle {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--white-30);
+    border-radius: 50%;
+    z-index: -1;
+    transition: all 0.3s ease;
 }
 
-.luz-description p {
-    color: var(--white-80);
-    font-size: 1.0625rem;
-    line-height: 1.8;
+.menu-item:hover .item-circle {
+    border-color: var(--accent-red);
+    box-shadow:
+        0 0 15px rgba(255, 0, 0, 0.5),
+        inset 0 0 15px rgba(255, 0, 0, 0.2);
+    transform: scale(1.1);
 }
 
-.luz-cta {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
+.menu-item:hover {
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--angle))
+        translateY(calc(var(--radius) * -1))
+        rotate(calc(var(--angle) * -1))
+        scale(1.15);
+    z-index: 100;
 }
 
-/* ===== FOOTER ===== */
-.footer {
-    background: rgba(0, 0, 0, 0.8);
-    border-top: 1px solid var(--white-15);
-    padding: 4rem 3rem 2rem;
+.menu-item:hover .item-label {
+    color: var(--accent-red);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
 }
 
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    margin-bottom: 2rem;
-}
-
-.footer-section h4 {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.875rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    color: var(--white-100);
-}
-
-.footer-section ul {
-    list-style: none;
-}
-
-.footer-section a {
-    color: var(--white-80);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-    display: block;
-    margin-bottom: 0.75rem;
-}
-
-.footer-section a:hover {
-    color: var(--white-100);
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid var(--white-15);
-    color: var(--white-60);
-    font-size: 0.875rem;
-    max-width: 1400px;
-    margin: 0 auto;
+.menu-item:hover .item-icon {
+    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8));
+    transform: scale(1.2);
 }
 
 /* ===== ANIMATIONS ===== */
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-60px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(60px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes bounce {
+@keyframes logoGlow {
     0%, 100% {
-        transform: translateX(-50%) translateY(0);
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        letter-spacing: 4px;
     }
     50% {
-        transform: translateX(-50%) translateY(15px);
+        text-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 60px rgba(0, 255, 255, 0.4);
+        letter-spacing: 8px;
+    }
+}
+
+@keyframes rotateBorder {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
     }
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .nav-menu {
-        gap: 1.5rem;
+    .center-logo {
+        font-size: 2rem;
     }
 
-    .nav-menu a {
-        font-size: 0.75rem;
+    .center-circle {
+        width: 100px;
+        height: 100px;
     }
 
-    .hero {
-        flex-direction: column;
-        text-align: center;
-        padding: 2rem;
+    .menu-item {
+        --radius: 180px;
+        width: 70px;
+        height: 70px;
     }
 
-    .hero-content {
-        max-width: 100%;
-        margin-bottom: 3rem;
+    .item-icon {
+        font-size: 1.8rem;
     }
 
-    .hero-cta-group {
-        justify-content: center;
+    .item-label {
+        font-size: 0.7rem;
     }
+}
 
-    .hero-image {
-        min-height: 300px;
-    }
+/* ===== HUD TEXT ===== */
+.hud-text {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    letter-spacing: 2px;
+    color: var(--white-60);
+    animation: pulse 2s infinite;
+    z-index: 1;
+}
 
-    section {
-        padding: 3rem 1.5rem;
-    }
-
-    .nav-container {
-        padding: 0 1.5rem;
-    }
+.hud-text span {
+    color: var(--accent-red);
 }
 """
 
-# ===== HOME PAGE =====
+# ===== HOME PAGE (RADIAL MENU) =====
 @app.get("/", response_class=HTMLResponse)
 def get_home():
-    """Página principal - Inspired by SpaceX"""
     return f"""
     <!DOCTYPE html>
     <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Skynet - La Resistencia de Venezuela</title>
-        <style>
-            {CSS_SPACEX}
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <title>Skynet - La Resistencia</title>
+        <style>{CSS_RADIAL}</style>
     </head>
     <body>
-        <!-- NAVBAR -->
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">🚀 SKYNET</div>
-                <ul class="nav-menu">
-                    <li><a href="#home">Inicio</a></li>
-                    <li><a href="#resistencia">Resistencia</a></li>
-                    <li><a href="#donaciones">Donaciones</a></li>
-                    <li><a href="#luz">Luz</a></li>
-                    <li><a href="/registro">Acceso</a></li>
-                </ul>
-            </div>
-        </nav>
+        <div class="hud-text">
+            SKYNET v<span>1.0</span> | ONLINE
+        </div>
 
-        <!-- HERO SECTION -->
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">La Resistencia</h1>
-                <p class="hero-subtitle">Plataforma de coordinación descentralizada para la liberación de Venezuela. Transparencia, seguridad y acción coordinada.</p>
-                <div class="hero-cta-group">
-                    <a href="/registro" class="btn btn-primary">Únete Ahora</a>
-                    <a href="#resistencia" class="btn">Conoce Más</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-visual">🌐</div>
-            </div>
-            <div class="scroll-indicator">
-                <span>Scroll</span>
-                <div class="scroll-arrow"></div>
-            </div>
-        </section>
+        <div class="radial-menu-wrapper">
+            <div class="center-circle"></div>
 
-        <!-- RESISTENCIA SECTION -->
-        <section id="resistencia" class="resistencia">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Sobre La Resistencia</h2>
-                    <p>Pilares fundamentales de Skynet</p>
-                </div>
-                <div class="resistencia-grid">
-                    <div class="resistencia-card">
-                        <div class="card-icon">🔒</div>
-                        <h3>Encriptación Total</h3>
-                        <p>Tus datos están protegidos con los más altos estándares de seguridad. Privacidad garantizada.</p>
-                    </div>
-                    <div class="resistencia-card">
-                        <div class="card-icon">⛓️</div>
-                        <h3>Blockchain</h3>
-                        <p>Transparencia verificable en cada transacción. Auditoría pública e inmutable.</p>
-                    </div>
-                    <div class="resistencia-card">
-                        <div class="card-icon">🤝</div>
-                        <h3>Comunidad</h3>
-                        <p>Miles de venezolanos coordinados. Red descentralizada de resistencia activa.</p>
-                    </div>
-                    <div class="resistencia-card">
-                        <div class="card-icon">💡</div>
-                        <h3>Innovación</h3>
-                        <p>Herramientas tecnológicas avanzadas para la liberación. Desarrollo continuo.</p>
-                    </div>
-                </div>
+            <div class="radial-center">
+                <div class="center-logo">🚀 SKYNET</div>
+                <div class="center-subtitle">La Resistencia</div>
             </div>
-        </section>
 
-        <!-- DONACIONES SECTION -->
-        <section id="donaciones" class="donaciones">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Dona Por La Libertad</h2>
-                    <p>Tu contribución financia operaciones de resistencia</p>
-                </div>
-                <div class="donaciones-grid">
-                    <div class="donacion-card">
-                        <div class="donacion-icon">💳</div>
-                        <h3>Tarjeta de Crédito</h3>
-                        <p>Stripe - Seguro y rápido</p>
-                        <a href="#" class="btn">Donar</a>
-                    </div>
-                    <div class="donacion-card">
-                        <div class="donacion-icon">₿</div>
-                        <h3>Bitcoin</h3>
-                        <p>Privacidad y seguridad</p>
-                        <a href="#" class="btn">Donar</a>
-                    </div>
-                    <div class="donacion-card">
-                        <div class="donacion-icon">💰</div>
-                        <h3>Binance</h3>
-                        <p>Cripto directo</p>
-                        <a href="#" class="btn">Donar</a>
-                    </div>
-                    <div class="donacion-card">
-                        <div class="donacion-icon">📱</div>
-                        <h3>Pago Móvil</h3>
-                        <p>Para usuarios en Venezuela</p>
-                        <a href="#" class="btn">Donar</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <nav class="radial-menu">
+                <a href="#resistencia" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">🔒</span>
+                    <span class="item-label">Resistencia</span>
+                </a>
+                <a href="#donaciones" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">💳</span>
+                    <span class="item-label">Donar</span>
+                </a>
+                <a href="#luz" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">₿</span>
+                    <span class="item-label">Cripto LUZ</span>
+                </a>
+                <a href="/registro" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">📝</span>
+                    <span class="item-label">Registro</span>
+                </a>
+                <a href="#foro" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">💬</span>
+                    <span class="item-label">Comunidad</span>
+                </a>
+                <a href="#noticias" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">📡</span>
+                    <span class="item-label">Noticias</span>
+                </a>
+                <a href="#trader" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">📈</span>
+                    <span class="item-label">Trader</span>
+                </a>
+                <a href="https://t.me/rogerhernandzzz" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">📱</span>
+                    <span class="item-label">Contacto</span>
+                </a>
+            </nav>
+        </div>
 
-        <!-- LUZ SECTION -->
-        <section id="luz" class="luz-crypto">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Cripto LUZ</h2>
-                    <p>La moneda de la libertad - 20 millones de unidades</p>
-                </div>
-                <div class="luz-info">
-                    <div class="luz-stats">
-                        <div class="stat-box">
-                            <span class="stat-number">20M</span>
-                            <span class="stat-label">Suministro Total</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-number">\$0.10</span>
-                            <span class="stat-label">Precio Actual</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">Transparencia</span>
-                        </div>
-                    </div>
-                    <div class="luz-description">
-                        <p>LUZ es una criptomoneda diseñada para financiar la resistencia. Cada transacción es verificable en blockchain y totalmente transparente.</p>
-                    </div>
-                    <div class="luz-cta">
-                        <a href="#" class="btn btn-primary">Compra LUZ</a>
-                        <a href="#" class="btn">Whitepaper</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Skynet</h4>
-                    <p style="color:var(--white-80); font-size:0.9rem;">La plataforma de la resistencia venezolana</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces</h4>
-                    <ul>
-                        <li><a href="#resistencia">Resistencia</a></li>
-                        <li><a href="#donaciones">Donaciones</a></li>
-                        <li><a href="#luz">Cripto LUZ</a></li>
-                        <li><a href="/health">Status API</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <ul>
-                        <li><a href="https://t.me/rogerhernandzzz" target="_blank">Telegram</a></li>
-                        <li><a href="#">Email</a></li>
-                        <li><a href="#">WhatsApp</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Recursos</h4>
-                    <ul>
-                        <li><a href="#">Documentación</a></li>
-                        <li><a href="#">GitHub</a></li>
-                        <li><a href="/health">API Status</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Skynet - La Resistencia. Todos los derechos reservados.</p>
-            </div>
-        </footer>
+        <script>
+            // Efecto parallax suave en mouse
+            document.addEventListener('mousemove', (e) => {{
+                const wrapper = document.querySelector('.radial-menu-wrapper');
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                wrapper.style.transform = `perspective(1000px) rotateX(${{-y}}deg) rotateY(${{x}}deg)`;
+            }});
+        </script>
     </body>
     </html>
     """
 
+# ===== REGISTRO PAGE =====
 @app.get("/registro", response_class=HTMLResponse)
 def get_registro():
-    """Página de registro"""
     return f"""
     <!DOCTYPE html>
     <html lang="es">
@@ -795,38 +382,50 @@ def get_registro():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Skynet - Registro</title>
         <style>
-            {CSS_SPACEX}
+            {CSS_RADIAL}
 
             .registro-wrapper {{
-                min-height: 100vh;
+                position: fixed;
+                inset: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 2rem;
-                margin-top: 60px;
+                z-index: 1000;
             }}
 
             .registro-card {{
                 background: rgba(255, 255, 255, 0.02);
-                border: 1px solid var(--white-15);
+                border: 2px solid var(--white-30);
                 padding: 3rem;
                 max-width: 450px;
-                width: 100%;
+                width: 90%;
                 backdrop-filter: blur(10px);
-                animation: fadeInUp 0.8s ease-out;
+                box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
+                animation: cardEntry 0.6s ease-out;
+            }}
+
+            @keyframes cardEntry {{
+                from {{
+                    opacity: 0;
+                    transform: scale(0.8) translateY(20px);
+                }}
+                to {{
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }}
             }}
 
             .registro-card h1 {{
-                font-family: 'Syne', sans-serif;
+                font-family: 'Space Mono', monospace;
                 font-size: 1.75rem;
-                font-weight: 700;
                 text-align: center;
-                margin-bottom: 0.5rem;
+                margin-bottom: 1rem;
+                letter-spacing: 2px;
             }}
 
             .registro-subtitle {{
                 text-align: center;
-                color: var(--white-80);
+                color: var(--white-60);
                 margin-bottom: 2rem;
                 font-size: 0.9rem;
             }}
@@ -847,7 +446,7 @@ def get_registro():
                 width: 100%;
                 padding: 0.75rem;
                 background: rgba(255, 255, 255, 0.03);
-                border: 1px solid var(--white-15);
+                border: 1px solid var(--white-30);
                 color: var(--white-100);
                 font-size: 0.9rem;
                 transition: all 0.3s ease;
@@ -855,8 +454,9 @@ def get_registro():
 
             .form-group input:focus {{
                 outline: none;
-                border-color: var(--white-100);
+                border-color: var(--accent-red);
                 background: rgba(255, 255, 255, 0.05);
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
             }}
 
             .submit-btn {{
@@ -874,7 +474,9 @@ def get_registro():
             }}
 
             .submit-btn:hover {{
-                background: var(--white-80);
+                background: var(--accent-red);
+                border-color: var(--accent-red);
+                color: var(--white-100);
             }}
 
             .back-link {{
@@ -883,13 +485,13 @@ def get_registro():
             }}
 
             .back-link a {{
-                color: var(--white-80);
+                color: var(--white-60);
                 text-decoration: none;
                 font-size: 0.875rem;
             }}
 
             .back-link a:hover {{
-                color: var(--white-100);
+                color: var(--accent-red);
             }}
         </style>
     </head>
@@ -920,7 +522,7 @@ def get_registro():
                 </form>
 
                 <div class="back-link">
-                    <a href="/">← Volver al inicio</a>
+                    <a href="/">← Volver</a>
                 </div>
             </div>
         </div>
@@ -928,7 +530,7 @@ def get_registro():
         <script>
             function handleSubmit(event) {{
                 event.preventDefault();
-                alert('✅ Registro exitoso - Bienvenido a la resistencia');
+                alert('✅ Bienvenido a la Resistencia');
                 window.location.href = '/';
                 return false;
             }}
@@ -940,19 +542,19 @@ def get_registro():
 # ===== API ENDPOINTS =====
 @app.post("/api/auth/register")
 def register(username: str, email: str, password: str, cedula: str):
-    return {"success": True, "message": "Registro completado", "user": {"username": username, "email": email}}
+    return {"success": True, "message": "Registro completado"}
 
 @app.post("/api/auth/login")
 def login(email: str, password: str):
-    return {"success": True, "message": "Login exitoso", "token": "jwt_token"}
+    return {"success": True, "token": "jwt_token"}
 
 @app.get("/api/news")
 def get_news():
-    return {"news": [{"id": 1, "title": "Skynet está LIVE", "created_at": datetime.now().isoformat()}]}
+    return {"news": [{"id": 1, "title": "Skynet está LIVE"}]}
 
 @app.get("/api/donations/stats")
 def get_donation_stats():
-    return {"total_donations": 0, "total_amount": 0, "currency": "USD"}
+    return {"total_donations": 0, "total_amount": 0}
 
 @app.get("/api/crypto/luz")
 def get_luz_info():
