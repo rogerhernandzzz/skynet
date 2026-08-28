@@ -604,7 +604,6 @@ def get_home():
         </div>
 
         <div class="auth-panel" id="authPanel">
-            <a href="/admin" class="auth-button" style="text-decoration: none;">⚙️ Admin</a>
             <button class="auth-button" id="panelBtn" onclick="openPanelUsuario()" style="display:none;">👤 Panel</button>
             <button class="auth-button" id="regBtn" onclick="openRegistro()">Registro</button>
             <button class="auth-button" id="ingBtn" onclick="openIngresar()">Ingresar</button>
@@ -737,19 +736,19 @@ def get_home():
 
         <script>
             function openRegistro() {{
-                document.getElementById('registroModal').classList.add('active');
+                document.getElementById('registroModal').style.display = 'flex';
             }}
 
             function closeRegistro() {{
-                document.getElementById('registroModal').classList.remove('active');
+                document.getElementById('registroModal').style.display = 'none';
             }}
 
             function openIngresar() {{
-                document.getElementById('ingresarModal').classList.add('active');
+                document.getElementById('ingresarModal').style.display = 'flex';
             }}
 
             function closeIngresar() {{
-                document.getElementById('ingresarModal').classList.remove('active');
+                document.getElementById('ingresarModal').style.display = 'none';
             }}
 
             function handleRegistro(event) {{
