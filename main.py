@@ -239,6 +239,17 @@ body {
     z-index: 1;
 }
 
+.users-stats {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    color: var(--white-60);
+    z-index: 1;
+}
+
 .hud-text span {
     color: var(--accent-red);
 }
@@ -552,7 +563,8 @@ def get_home():
         <style>{CSS_RADIAL}</style>
     </head>
     <body>
-        <div class="hud-text">SKYNET v<span>1.1</span> | ONLINE</div>
+        <div class="hud-text">SKYNET v<span>1.1</span></div>
+        <div class="users-stats">👥 2 Registrados / 2 Verificados</div>
 
         <div class="auth-panel" id="authPanel">
             <a href="/admin" class="auth-button" style="text-decoration: none;">⚙️ Admin</a>
