@@ -633,7 +633,7 @@ def get_home():
                 <a href="#donaciones" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">💳</span>
-                    <span class="item-label">Donar</span>
+                    <span class="item-label">Donar / Contribuir</span>
                 </a>
                 <a href="/cripto" class="menu-item">
                     <div class="item-circle"></div>
@@ -643,7 +643,7 @@ def get_home():
                 <a href="#foro" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">💬</span>
-                    <span class="item-label">Comunidad</span>
+                    <span class="item-label">Comunidad / Logística</span>
                 </a>
                 <a href="/noticias" class="menu-item">
                     <div class="item-circle"></div>
