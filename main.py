@@ -30,7 +30,7 @@ def health_check():
         "version": "1.0.0"
     }
 
-# ===== CSS RADIAL MENU (9 ITEMS) =====
+# ===== CSS RADIAL MENU (8 ITEMS) =====
 CSS_RADIAL = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
@@ -141,14 +141,13 @@ body {
 }
 
 .menu-item:nth-child(1) { --angle: 0deg; }
-.menu-item:nth-child(2) { --angle: 40deg; }
-.menu-item:nth-child(3) { --angle: 80deg; }
-.menu-item:nth-child(4) { --angle: 120deg; }
-.menu-item:nth-child(5) { --angle: 160deg; }
-.menu-item:nth-child(6) { --angle: 200deg; }
-.menu-item:nth-child(7) { --angle: 240deg; }
-.menu-item:nth-child(8) { --angle: 280deg; }
-.menu-item:nth-child(9) { --angle: 320deg; }
+.menu-item:nth-child(2) { --angle: 45deg; }
+.menu-item:nth-child(3) { --angle: 90deg; }
+.menu-item:nth-child(4) { --angle: 135deg; }
+.menu-item:nth-child(5) { --angle: 180deg; }
+.menu-item:nth-child(6) { --angle: 225deg; }
+.menu-item:nth-child(7) { --angle: 270deg; }
+.menu-item:nth-child(8) { --angle: 315deg; }
 
 .menu-item {
     --radius: clamp(120px, 35vmin, 400px);
@@ -254,10 +253,10 @@ body {
     background: transparent;
     border: 1px solid var(--white-30);
     color: var(--white-100);
-    padding: 0.5rem 1.5rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
     font-family: 'Space Mono', monospace;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -298,18 +297,104 @@ body {
     color: var(--accent-red);
 }
 
-/* ===== PAGE STYLES ===== */
-.page-header {
+/* ===== MODALS ===== */
+.modal {
+    display: none;
     position: fixed;
-    top: 20px;
-    left: 20px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.875rem;
-    letter-spacing: 2px;
-    color: var(--white-60);
-    z-index: 1;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
 }
 
+.modal.active {
+    display: flex;
+}
+
+.modal-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px solid var(--white-30);
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+}
+
+.modal-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--white-30);
+    color: var(--white-100);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-red);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--white-100);
+    color: var(--black);
+    border: 1px solid var(--white-100);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    color: var(--white-100);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--white-60);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--accent-red);
+}
+
+/* ===== PAGE STYLES ===== */
 .back-button {
     position: fixed;
     top: 20px;
@@ -464,7 +549,53 @@ def get_home():
         <div class="hud-text">SKYNET v<span>1.0</span> | ONLINE</div>
 
         <div class="auth-panel" id="authPanel">
-            <a href="/registro" class="auth-button">Registro</a>
+            <button class="auth-button" onclick="openRegistro()">Registro</button>
+            <button class="auth-button" onclick="openIngresar()">Ingresar</button>
+        </div>
+
+        <!-- MODALS -->
+        <div class="modal" id="registroModal">
+            <div class="modal-card">
+                <button class="close-modal" onclick="closeRegistro()">✕</button>
+                <div class="modal-title">🚀 REGISTRO</div>
+                <form onsubmit="return handleRegistro(event)">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" id="regUsername" placeholder="Tu usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cédula</label>
+                        <input type="text" id="regCedula" placeholder="V-12345678" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="regPassword" placeholder="Min. 8 caracteres" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Registrarse</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="ingresarModal">
+            <div class="modal-card">
+                <button class="close-modal" onclick="closeIngresar()">✕</button>
+                <div class="modal-title">⚡ INGRESAR</div>
+                <form onsubmit="return handleIngresar(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="ingEmail" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="ingPassword" placeholder="Tu contraseña" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Ingresar</button>
+                </form>
+            </div>
         </div>
 
         <div class="radial-menu-wrapper">
@@ -489,11 +620,6 @@ def get_home():
                     <div class="item-circle"></div>
                     <span class="item-icon">₿</span>
                     <span class="item-label">Cripto LUZ</span>
-                </a>
-                <a href="/registro" class="menu-item">
-                    <div class="item-circle"></div>
-                    <span class="item-icon">📝</span>
-                    <span class="item-label">Registro</span>
                 </a>
                 <a href="#foro" class="menu-item">
                     <div class="item-circle"></div>
@@ -536,8 +662,47 @@ def get_home():
                         </div>
                     `;
                 }} else {{
-                    authPanel.innerHTML = `<a href="/registro" class="auth-button">Registro</a>`;
+                    authPanel.innerHTML = `
+                        <button class="auth-button" onclick="openRegistro()">Registro</button>
+                        <button class="auth-button" onclick="openIngresar()">Ingresar</button>
+                    `;
                 }}
+            }}
+
+            function openRegistro() {{
+                document.getElementById('registroModal').classList.add('active');
+            }}
+
+            function closeRegistro() {{
+                document.getElementById('registroModal').classList.remove('active');
+            }}
+
+            function openIngresar() {{
+                document.getElementById('ingresarModal').classList.add('active');
+            }}
+
+            function closeIngresar() {{
+                document.getElementById('ingresarModal').classList.remove('active');
+            }}
+
+            function handleRegistro(event) {{
+                event.preventDefault();
+                const username = document.getElementById('regUsername').value;
+                localStorage.setItem('username', username);
+                alert('✅ Bienvenido: ' + username);
+                closeRegistro();
+                updateAuthPanel();
+                return false;
+            }}
+
+            function handleIngresar(event) {{
+                event.preventDefault();
+                const email = document.getElementById('ingEmail').value;
+                localStorage.setItem('username', email.split('@')[0]);
+                alert('✅ Ingreso exitoso');
+                closeIngresar();
+                updateAuthPanel();
+                return false;
             }}
 
             function logout() {{
@@ -546,6 +711,11 @@ def get_home():
             }}
 
             updateAuthPanel();
+
+            document.addEventListener('click', (e) => {{
+                if (e.target.id === 'registroModal') closeRegistro();
+                if (e.target.id === 'ingresarModal') closeIngresar();
+            }});
         </script>
     </body>
     </html>
@@ -679,138 +849,6 @@ def get_ia():
                 </div>
             </div>
         </div>
-    </body>
-    </html>
-    """
-
-# ===== REGISTRO PAGE =====
-@app.get("/registro", response_class=HTMLResponse)
-def get_registro():
-    return f"""
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Skynet - Registro</title>
-        <style>
-            {CSS_RADIAL}
-            .registro-wrapper {{
-                position: fixed;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-            }}
-            .registro-card {{
-                background: rgba(255, 255, 255, 0.02);
-                border: 2px solid var(--white-30);
-                padding: 3rem;
-                max-width: 450px;
-                width: 90%;
-                backdrop-filter: blur(10px);
-            }}
-            .registro-card h1 {{
-                font-family: 'Space Mono', monospace;
-                font-size: 1.75rem;
-                text-align: center;
-                margin-bottom: 1rem;
-            }}
-            .form-group {{
-                margin-bottom: 1.5rem;
-            }}
-            .form-group label {{
-                display: block;
-                margin-bottom: 0.5rem;
-                font-size: 0.875rem;
-                letter-spacing: 0.5px;
-            }}
-            .form-group input {{
-                width: 100%;
-                padding: 0.75rem;
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid var(--white-30);
-                color: var(--white-100);
-                transition: all 0.3s ease;
-            }}
-            .form-group input:focus {{
-                outline: none;
-                border-color: var(--accent-red);
-                background: rgba(255, 255, 255, 0.05);
-            }}
-            .submit-btn {{
-                width: 100%;
-                padding: 0.875rem;
-                background: var(--white-100);
-                color: var(--black);
-                border: 1px solid var(--white-100);
-                font-weight: 600;
-                cursor: pointer;
-                text-transform: uppercase;
-                transition: all 0.3s ease;
-            }}
-            .submit-btn:hover {{
-                background: var(--accent-red);
-                border-color: var(--accent-red);
-                color: var(--white-100);
-            }}
-            .back-link {{
-                text-align: center;
-                margin-top: 1.5rem;
-            }}
-            .back-link a {{
-                color: var(--white-60);
-                text-decoration: none;
-                font-size: 0.875rem;
-            }}
-            .back-link a:hover {{
-                color: var(--accent-red);
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="registro-wrapper">
-            <div class="registro-card">
-                <h1>🚀 SKYNET</h1>
-                <p style="text-align: center; color: var(--white-60); margin-bottom: 2rem; font-size: 0.9rem;">Únete a la Resistencia</p>
-
-                <form onsubmit="return handleSubmit(event)">
-                    <div class="form-group">
-                        <label>Usuario</label>
-                        <input type="text" id="username" placeholder="Tu usuario" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="tu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cédula</label>
-                        <input type="text" placeholder="V-12345678" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contraseña</label>
-                        <input type="password" placeholder="Min. 8 caracteres" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Registrarse</button>
-                </form>
-
-                <div class="back-link">
-                    <a href="/">← Volver</a>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function handleSubmit(event) {{
-                event.preventDefault();
-                const username = document.getElementById('username').value;
-                localStorage.setItem('username', username);
-                alert('✅ Bienvenido: ' + username);
-                window.location.href = '/';
-                return false;
-            }}
-        </script>
     </body>
     </html>
     """
