@@ -238,6 +238,66 @@ body {
     color: var(--accent-red);
 }
 
+/* ===== AUTH PANEL (TOP RIGHT) ===== */
+.auth-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Space Mono', monospace;
+}
+
+.auth-button {
+    background: transparent;
+    border: 1px solid var(--white-30);
+    color: var(--white-100);
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.auth-button:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.user-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--white-30);
+    border-radius: 4px;
+    color: var(--accent-red);
+}
+
+.user-alias {
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+}
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: var(--white-60);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.logout-btn:hover {
+    color: var(--accent-red);
+}
+
 /* ===== PAGE STYLES ===== */
 .page-header {
     position: fixed;
@@ -403,6 +463,10 @@ def get_home():
     <body>
         <div class="hud-text">SKYNET v<span>1.0</span> | ONLINE</div>
 
+        <div class="auth-panel" id="authPanel">
+            <a href="/registro" class="auth-button">Registro</a>
+        </div>
+
         <div class="radial-menu-wrapper">
             <div class="center-circle"></div>
             <div class="radial-center">
@@ -458,11 +522,36 @@ def get_home():
                 </a>
             </nav>
         </div>
+
+        <script>
+            function updateAuthPanel() {{
+                const username = localStorage.getItem('username');
+                const authPanel = document.getElementById('authPanel');
+
+                if (username) {{
+                    authPanel.innerHTML = `
+                        <div class="user-display">
+                            <span class="user-alias">\${{username}}</span>
+                            <button class="logout-btn" onclick="logout()">✕</button>
+                        </div>
+                    `;
+                }} else {{
+                    authPanel.innerHTML = `<a href="/registro" class="auth-button">Registro</a>`;
+                }}
+            }}
+
+            function logout() {{
+                localStorage.removeItem('username');
+                updateAuthPanel();
+            }}
+
+            updateAuthPanel();
+        </script>
     </body>
     </html>
     """
 
-# ===== PERFIL PAGE (YO CIBERNÉTICO) =====
+# ===== PERFIL PAGE =====
 @app.get("/perfil", response_class=HTMLResponse)
 def get_perfil():
     return f"""
@@ -500,7 +589,7 @@ def get_perfil():
                         <a href="https://github.com/rogerhernandzzz" target="_blank" class="social-link">
                             <span>💻</span> GitHub: rogerhernandzzz
                         </a>
-                        <a href="mailto:roger@skynet.com" class="social-link">
+                        <a href="mailto:contact@skynet.com" class="social-link">
                             <span>📧</span> Email: contact@skynet.com
                         </a>
                         <a href="https://twitter.com/rogerhernandzzz" target="_blank" class="social-link">
@@ -689,7 +778,7 @@ def get_registro():
                 <form onsubmit="return handleSubmit(event)">
                     <div class="form-group">
                         <label>Usuario</label>
-                        <input type="text" placeholder="Tu usuario" required>
+                        <input type="text" id="username" placeholder="Tu usuario" required>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
@@ -715,7 +804,9 @@ def get_registro():
         <script>
             function handleSubmit(event) {{
                 event.preventDefault();
-                alert('✅ Bienvenido a la Resistencia');
+                const username = document.getElementById('username').value;
+                localStorage.setItem('username', username);
+                alert('✅ Bienvenido: ' + username);
                 window.location.href = '/';
                 return false;
             }}
