@@ -30,7 +30,7 @@ def health_check():
         "version": "1.0.0"
     }
 
-# ===== CSS RADIAL MENU (SIN ANIMACIONES) =====
+# ===== CSS RADIAL MENU (9 ITEMS) =====
 CSS_RADIAL = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
@@ -65,7 +65,6 @@ body {
     justify-content: center;
 }
 
-/* ===== RADIAL MENU CONTAINER ===== */
 .radial-menu-wrapper {
     position: relative;
     width: 100vmin;
@@ -119,7 +118,6 @@ body {
     background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
 }
 
-/* ===== RADIAL MENU ITEMS ===== */
 .radial-menu {
     position: absolute;
     width: 100%;
@@ -143,13 +141,14 @@ body {
 }
 
 .menu-item:nth-child(1) { --angle: 0deg; }
-.menu-item:nth-child(2) { --angle: 45deg; }
-.menu-item:nth-child(3) { --angle: 90deg; }
-.menu-item:nth-child(4) { --angle: 135deg; }
-.menu-item:nth-child(5) { --angle: 180deg; }
-.menu-item:nth-child(6) { --angle: 225deg; }
-.menu-item:nth-child(7) { --angle: 270deg; }
-.menu-item:nth-child(8) { --angle: 315deg; }
+.menu-item:nth-child(2) { --angle: 40deg; }
+.menu-item:nth-child(3) { --angle: 80deg; }
+.menu-item:nth-child(4) { --angle: 120deg; }
+.menu-item:nth-child(5) { --angle: 160deg; }
+.menu-item:nth-child(6) { --angle: 200deg; }
+.menu-item:nth-child(7) { --angle: 240deg; }
+.menu-item:nth-child(8) { --angle: 280deg; }
+.menu-item:nth-child(9) { --angle: 320deg; }
 
 .menu-item {
     --radius: clamp(120px, 35vmin, 400px);
@@ -216,33 +215,14 @@ body {
     transform: scale(1.2);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .center-logo {
-        font-size: 2rem;
-    }
-
-    .center-circle {
-        width: 100px;
-        height: 100px;
-    }
-
-    .menu-item {
-        --radius: 180px;
-        width: 70px;
-        height: 70px;
-    }
-
-    .item-icon {
-        font-size: 1.8rem;
-    }
-
-    .item-label {
-        font-size: 0.7rem;
-    }
+    .center-logo { font-size: 2rem; }
+    .center-circle { width: 100px; height: 100px; }
+    .menu-item { --radius: 180px; width: 70px; height: 70px; }
+    .item-icon { font-size: 1.8rem; }
+    .item-label { font-size: 0.7rem; }
 }
 
-/* ===== HUD TEXT ===== */
 .hud-text {
     position: fixed;
     top: 20px;
@@ -257,9 +237,158 @@ body {
 .hud-text span {
     color: var(--accent-red);
 }
+
+/* ===== PAGE STYLES ===== */
+.page-header {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    letter-spacing: 2px;
+    color: var(--white-60);
+    z-index: 1;
+}
+
+.back-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid var(--white-30);
+    color: var(--white-100);
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.back-button:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.page-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.page-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--white-30);
+    padding: 3rem;
+    max-width: 600px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.1);
+}
+
+.page-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+.page-subtitle {
+    color: var(--white-60);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.profile-title {
+    color: var(--accent-red);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.profile-bio {
+    color: var(--white-80);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid var(--white-15);
+    border-radius: 4px;
+    color: var(--white-100);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.social-link:hover {
+    border-color: var(--accent-red);
+    background: rgba(255, 0, 0, 0.05);
+    color: var(--accent-red);
+}
+
+.ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.ai-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--white-15);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.ai-card:hover {
+    border-color: var(--accent-red);
+    background: rgba(255, 0, 0, 0.05);
+}
+
+.ai-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.ai-name {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.ai-desc {
+    color: var(--white-60);
+    font-size: 0.875rem;
+}
 """
 
-# ===== HOME PAGE (RADIAL MENU) =====
+# ===== HOME PAGE =====
 @app.get("/", response_class=HTMLResponse)
 def get_home():
     return f"""
@@ -267,18 +396,15 @@ def get_home():
     <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Skynet - La Resistencia</title>
         <style>{CSS_RADIAL}</style>
     </head>
     <body>
-        <div class="hud-text">
-            SKYNET v<span>1.0</span> | ONLINE
-        </div>
+        <div class="hud-text">SKYNET v<span>1.0</span> | ONLINE</div>
 
         <div class="radial-menu-wrapper">
             <div class="center-circle"></div>
-
             <div class="radial-center">
                 <div class="center-logo">🚀 SKYNET</div>
                 <div class="center-subtitle">La Resistencia</div>
@@ -320,12 +446,149 @@ def get_home():
                     <span class="item-icon">📈</span>
                     <span class="item-label">Trader</span>
                 </a>
-                <a href="https://t.me/rogerhernandzzz" class="menu-item">
+                <a href="/perfil" class="menu-item">
                     <div class="item-circle"></div>
-                    <span class="item-icon">📱</span>
-                    <span class="item-label">Contacto</span>
+                    <span class="item-icon">🤖</span>
+                    <span class="item-label">Yo Cibernético</span>
+                </a>
+                <a href="/ia" class="menu-item">
+                    <div class="item-circle"></div>
+                    <span class="item-icon">⚡</span>
+                    <span class="item-label">IA</span>
                 </a>
             </nav>
+        </div>
+    </body>
+    </html>
+    """
+
+# ===== PERFIL PAGE (YO CIBERNÉTICO) =====
+@app.get("/perfil", response_class=HTMLResponse)
+def get_perfil():
+    return f"""
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Roger Hernández - Yo Cibernético</title>
+        <style>{CSS_RADIAL}</style>
+    </head>
+    <body>
+        <a href="/" class="back-button">← VOLVER</a>
+
+        <div class="page-container">
+            <div class="page-card">
+                <div class="profile-section">
+                    <div style="text-align: center; font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+                    <div class="profile-name">Roger Hernández</div>
+                    <div class="profile-title">Cibernético | Fundador de Skynet</div>
+                </div>
+
+                <div class="profile-bio">
+                    Ingeniero de sistemas y activista político dedicado a la liberación digital de Venezuela.
+                    Fundador de Skynet, una plataforma descentralizada para coordinar la resistencia.
+                    Especialista en seguridad, blockchain y automatización.
+                </div>
+
+                <div class="profile-section">
+                    <h3 style="margin-bottom: 1rem; letter-spacing: 1px;">CONTACTO Y REDES</h3>
+                    <div class="social-links">
+                        <a href="https://t.me/rogerhernandzzz" target="_blank" class="social-link">
+                            <span>📱</span> Telegram: @rogerhernandzzz
+                        </a>
+                        <a href="https://github.com/rogerhernandzzz" target="_blank" class="social-link">
+                            <span>💻</span> GitHub: rogerhernandzzz
+                        </a>
+                        <a href="mailto:roger@skynet.com" class="social-link">
+                            <span>📧</span> Email: contact@skynet.com
+                        </a>
+                        <a href="https://twitter.com/rogerhernandzzz" target="_blank" class="social-link">
+                            <span>𝕏</span> Twitter: @rogerhernandzzz
+                        </a>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 style="margin-bottom: 1rem; letter-spacing: 1px;">ESPECIALIDADES</h3>
+                    <div style="color: var(--white-80); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                        <div>• Seguridad Cibernética</div>
+                        <div>• Blockchain</div>
+                        <div>• Automatización</div>
+                        <div>• IA & Bots</div>
+                        <div>• FastAPI</div>
+                        <div>• DevOps</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+# ===== IA PAGE =====
+@app.get("/ia", response_class=HTMLResponse)
+def get_ia():
+    return f"""
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inteligencia Artificial - Skynet</title>
+        <style>{CSS_RADIAL}</style>
+    </head>
+    <body>
+        <a href="/" class="back-button">← VOLVER</a>
+
+        <div class="page-container">
+            <div class="page-card">
+                <div class="page-title">⚡ INTELIGENCIA ARTIFICIAL</div>
+                <div class="page-subtitle">Agentes y Sistemas Autónomos 24/7</div>
+
+                <div class="ai-grid">
+                    <div class="ai-card">
+                        <div class="ai-icon">🤖</div>
+                        <div class="ai-name">Marketing Agent</div>
+                        <div class="ai-desc">Monitor de campañas, análisis de métricas, optimización automática</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-icon">📊</div>
+                        <div class="ai-name">Analytics Agent</div>
+                        <div class="ai-desc">Análisis de datos en tiempo real, reportes automáticos</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-icon">📱</div>
+                        <div class="ai-name">Social Agent</div>
+                        <div class="ai-desc">Publicación automática, gestión de comunidad, engagement</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-icon">🔐</div>
+                        <div class="ai-name">Security Agent</div>
+                        <div class="ai-desc">Monitoreo de seguridad, detección de anomalías, alertas</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-icon">⚙️</div>
+                        <div class="ai-name">Automation Agent</div>
+                        <div class="ai-desc">Tareas repetitivas, flujos automáticos, optimización</div>
+                    </div>
+                    <div class="ai-card">
+                        <div class="ai-icon">🧠</div>
+                        <div class="ai-name">Claude Integration</div>
+                        <div class="ai-desc">Procesamiento de lenguaje, análisis, decisiones inteligentes</div>
+                    </div>
+                </div>
+
+                <div class="profile-section" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--white-15);">
+                    <h3 style="margin-bottom: 1rem;">ESTADO DE AGENTES</h3>
+                    <div style="color: var(--white-80); font-size: 0.9rem; line-height: 2;">
+                        <div>✅ 12 Agentes Operacionales 24/7</div>
+                        <div>✅ 18 Tareas Celery Beat Automáticas</div>
+                        <div>✅ Monitoreo Continuo</div>
+                        <div>✅ Integración Claude Sonnet</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
     </html>
@@ -343,7 +606,6 @@ def get_registro():
         <title>Skynet - Registro</title>
         <style>
             {CSS_RADIAL}
-
             .registro-wrapper {{
                 position: fixed;
                 inset: 0;
@@ -352,7 +614,6 @@ def get_registro():
                 justify-content: center;
                 z-index: 1000;
             }}
-
             .registro-card {{
                 background: rgba(255, 255, 255, 0.02);
                 border: 2px solid var(--white-30);
@@ -360,53 +621,35 @@ def get_registro():
                 max-width: 450px;
                 width: 90%;
                 backdrop-filter: blur(10px);
-                box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
             }}
-
             .registro-card h1 {{
                 font-family: 'Space Mono', monospace;
                 font-size: 1.75rem;
                 text-align: center;
                 margin-bottom: 1rem;
-                letter-spacing: 2px;
             }}
-
-            .registro-subtitle {{
-                text-align: center;
-                color: var(--white-60);
-                margin-bottom: 2rem;
-                font-size: 0.9rem;
-            }}
-
             .form-group {{
                 margin-bottom: 1.5rem;
             }}
-
             .form-group label {{
                 display: block;
                 margin-bottom: 0.5rem;
-                font-weight: 500;
                 font-size: 0.875rem;
                 letter-spacing: 0.5px;
             }}
-
             .form-group input {{
                 width: 100%;
                 padding: 0.75rem;
                 background: rgba(255, 255, 255, 0.03);
                 border: 1px solid var(--white-30);
                 color: var(--white-100);
-                font-size: 0.9rem;
                 transition: all 0.3s ease;
             }}
-
             .form-group input:focus {{
                 outline: none;
                 border-color: var(--accent-red);
                 background: rgba(255, 255, 255, 0.05);
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
             }}
-
             .submit-btn {{
                 width: 100%;
                 padding: 0.875rem;
@@ -414,30 +657,24 @@ def get_registro():
                 color: var(--black);
                 border: 1px solid var(--white-100);
                 font-weight: 600;
-                font-size: 0.875rem;
-                letter-spacing: 1px;
                 cursor: pointer;
-                transition: all 0.3s ease;
                 text-transform: uppercase;
+                transition: all 0.3s ease;
             }}
-
             .submit-btn:hover {{
                 background: var(--accent-red);
                 border-color: var(--accent-red);
                 color: var(--white-100);
             }}
-
             .back-link {{
                 text-align: center;
                 margin-top: 1.5rem;
             }}
-
             .back-link a {{
                 color: var(--white-60);
                 text-decoration: none;
                 font-size: 0.875rem;
             }}
-
             .back-link a:hover {{
                 color: var(--accent-red);
             }}
@@ -447,24 +684,24 @@ def get_registro():
         <div class="registro-wrapper">
             <div class="registro-card">
                 <h1>🚀 SKYNET</h1>
-                <p class="registro-subtitle">Únete a la Resistencia</p>
+                <p style="text-align: center; color: var(--white-60); margin-bottom: 2rem; font-size: 0.9rem;">Únete a la Resistencia</p>
 
                 <form onsubmit="return handleSubmit(event)">
                     <div class="form-group">
-                        <label for="username">Usuario</label>
-                        <input type="text" id="username" placeholder="Tu usuario" required>
+                        <label>Usuario</label>
+                        <input type="text" placeholder="Tu usuario" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="tu@email.com" required>
+                        <label>Email</label>
+                        <input type="email" placeholder="tu@email.com" required>
                     </div>
                     <div class="form-group">
-                        <label for="cedula">Cédula</label>
-                        <input type="text" id="cedula" placeholder="V-12345678" required>
+                        <label>Cédula</label>
+                        <input type="text" placeholder="V-12345678" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" id="password" placeholder="Min. 8 caracteres" required>
+                        <label>Contraseña</label>
+                        <input type="password" placeholder="Min. 8 caracteres" required>
                     </div>
                     <button type="submit" class="submit-btn">Registrarse</button>
                 </form>
