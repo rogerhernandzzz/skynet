@@ -16,7 +16,7 @@ app = FastAPI(
 # ===== SISTEMA DE VERSIONES =====
 VERSIONS = {
     "1.0.0": ["Landing page inicial", "Radial menu 9 opciones", "Diseño SpaceX-style"],
-    "1.1.0": ["Panel de Admin (usuarios, noticias)", "Sección Noticias/Eventos", "Sistema de versiones integrado"]
+    "1.1.0": ["Panel de Admin (usuarios, noticias)", "Sección Eventos", "Sistema de versiones integrado"]
 }
 
 app.add_middleware(
@@ -702,7 +702,7 @@ def get_home():
                 <a href="/noticias" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">📡</span>
-                    <span class="item-label">Noticias/Eventos</span>
+                    <span class="item-label">Eventos</span>
                 </a>
                 <a href="/trader" class="menu-item">
                     <div class="item-circle"></div>
@@ -1073,7 +1073,7 @@ def get_admin():
                                 <strong>CAMBIOS:</strong>
                                 <ul>
                                     <li>✅ Panel de Administración completamente funcional</li>
-                                    <li>✅ Sección Noticias/Eventos con gestor de contenido</li>
+                                    <li>✅ Sección Eventos con gestor de contenido</li>
                                     <li>✅ Sistema de versiones integrado con changelog</li>
                                     <li>✅ Cambio de etiqueta: "IA" → "Inteligencia Artificial /"</li>
                                     <li>✅ URLs del menú actualizadas a rutas reales</li>
