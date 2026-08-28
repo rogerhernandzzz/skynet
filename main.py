@@ -248,6 +248,16 @@ body {
     letter-spacing: 1px;
     color: var(--white-60);
     z-index: 1;
+    text-align: right;
+}
+
+.users-stats div {
+    margin-bottom: 0.5rem;
+}
+
+.users-stats div:first-child {
+    color: var(--accent-red);
+    font-weight: bold;
 }
 
 .hud-text span {
@@ -588,7 +598,10 @@ def get_home():
     </head>
     <body>
         <div class="hud-text">SKYNET v<span>1.1</span></div>
-        <div class="users-stats">👥 2 Registrados / 2 Verificados</div>
+        <div class="users-stats">
+            <div>💵 Dinero recaudado: $12,450</div>
+            <div>👥 2 Registrados / 2 Verificados</div>
+        </div>
 
         <div class="auth-panel" id="authPanel">
             <a href="/admin" class="auth-button" style="text-decoration: none;">⚙️ Admin</a>
