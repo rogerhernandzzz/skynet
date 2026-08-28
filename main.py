@@ -626,7 +626,7 @@ def get_home():
                 <a href="#luz" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">₿</span>
-                    <span class="item-label">Cripto LUZ</span>
+                    <span class="item-label">Cripto Luz</span>
                 </a>
                 <a href="#foro" class="menu-item">
                     <div class="item-circle"></div>
@@ -651,7 +651,7 @@ def get_home():
                 <a href="/ia" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">⚡</span>
-                    <span class="item-label">Int. Artificial</span>
+                    <span class="item-label">Inteligencia Artificial</span>
                 </a>
             </nav>
         </div>
@@ -809,7 +809,7 @@ def get_ia():
 
         <div class="page-container">
             <div class="page-card">
-                <div class="page-title">⚡ INTELIGENCIA ARTIFICIAL</div>
+                <div class="page-title">🧠 INTELIGENCIA ARTIFICIAL</div>
                 <div class="page-subtitle">Agentes y Sistemas Autónomos 24/7</div>
 
                 <div class="ai-grid">
@@ -993,7 +993,7 @@ def get_admin():
                                 <strong>CAMBIOS:</strong>
                                 <ul>
                                     <li>✅ Landing page inicial con menú radial</li>
-                                    <li>✅ 9 opciones en círculo (Resistencia, Donar, Cripto LUZ, etc)</li>
+                                    <li>✅ 9 opciones en círculo (Resistencia, Donar, Cripto Luz, etc)</li>
                                     <li>✅ Diseño SpaceX-inspired (Black + White + Red)</li>
                                     <li>✅ Páginas: Registro, Perfil, IA</li>
                                     <li>✅ Deploy en Render con auto-redeploy en git push</li>
