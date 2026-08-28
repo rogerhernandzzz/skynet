@@ -623,9 +623,9 @@ def get_home():
                     <span class="item-icon">💳</span>
                     <span class="item-label">Donar</span>
                 </a>
-                <a href="#luz" class="menu-item">
+                <a href="/cripto" class="menu-item">
                     <div class="item-circle"></div>
-                    <span class="item-icon">₿</span>
+                    <span class="item-icon">⚡</span>
                     <span class="item-label">Cripto Luz</span>
                 </a>
                 <a href="#foro" class="menu-item">
@@ -650,7 +650,7 @@ def get_home():
                 </a>
                 <a href="/ia" class="menu-item">
                     <div class="item-circle"></div>
-                    <span class="item-icon">⚡</span>
+                    <span class="item-icon">🧠</span>
                     <span class="item-label">Inteligencia Artificial</span>
                 </a>
             </nav>
