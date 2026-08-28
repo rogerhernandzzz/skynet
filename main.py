@@ -30,7 +30,7 @@ def health_check():
         "version": "1.0.0"
     }
 
-# ===== CSS RADIAL MENU =====
+# ===== CSS RADIAL MENU (SIN ANIMACIONES) =====
 CSS_RADIAL = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
@@ -89,7 +89,7 @@ body {
     font-weight: 700;
     letter-spacing: 4px;
     margin-bottom: 1rem;
-    animation: logoGlow 3s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
 .center-subtitle {
@@ -109,7 +109,6 @@ body {
     border: 2px solid var(--white-30);
     border-radius: 50%;
     z-index: 5;
-    animation: rotateBorder 20s linear infinite;
 }
 
 .center-circle::before {
@@ -168,6 +167,7 @@ body {
     margin-bottom: 0.5rem;
     display: block;
     filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.3));
+    transition: all 0.3s ease;
 }
 
 .item-label {
@@ -176,6 +176,7 @@ body {
     letter-spacing: 1px;
     text-transform: uppercase;
     white-space: nowrap;
+    transition: all 0.3s ease;
 }
 
 .item-circle {
@@ -215,36 +216,6 @@ body {
     transform: scale(1.2);
 }
 
-/* ===== ANIMATIONS ===== */
-@keyframes logoGlow {
-    0%, 100% {
-        text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
-        letter-spacing: 4px;
-    }
-    50% {
-        text-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 60px rgba(0, 255, 255, 0.4);
-        letter-spacing: 8px;
-    }
-}
-
-@keyframes rotateBorder {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .center-logo {
@@ -280,7 +251,6 @@ body {
     font-size: 0.875rem;
     letter-spacing: 2px;
     color: var(--white-60);
-    animation: pulse 2s infinite;
     z-index: 1;
 }
 
@@ -357,16 +327,6 @@ def get_home():
                 </a>
             </nav>
         </div>
-
-        <script>
-            // Efecto parallax suave en mouse
-            document.addEventListener('mousemove', (e) => {{
-                const wrapper = document.querySelector('.radial-menu-wrapper');
-                const x = (e.clientX / window.innerWidth - 0.5) * 20;
-                const y = (e.clientY / window.innerHeight - 0.5) * 20;
-                wrapper.style.transform = `perspective(1000px) rotateX(${{-y}}deg) rotateY(${{x}}deg)`;
-            }});
-        </script>
     </body>
     </html>
     """
@@ -401,18 +361,6 @@ def get_registro():
                 width: 90%;
                 backdrop-filter: blur(10px);
                 box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
-                animation: cardEntry 0.6s ease-out;
-            }}
-
-            @keyframes cardEntry {{
-                from {{
-                    opacity: 0;
-                    transform: scale(0.8) translateY(20px);
-                }}
-                to {{
-                    opacity: 1;
-                    transform: scale(1) translateY(0);
-                }}
             }}
 
             .registro-card h1 {{
