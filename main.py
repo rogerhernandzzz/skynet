@@ -999,6 +999,8 @@ def get_admin():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Panel de Admin - Skynet</title>
         <style>{CSS_RADIAL}
+            .login-container {{ display:flex; align-items:center; justify-content:center; min-height:100vh; }}
+            .login-box {{ background:linear-gradient(135deg,rgba(18,18,26,.97),rgba(22,22,38,.95)); border:1px solid rgba(108,92,231,.2); backdrop-filter:blur(20px); padding:40px; border-radius:12px; max-width:400px; width:100%; }}
             .admin-container {{ max-width: 1200px; margin: 0 auto; padding: 40px; }}
             .admin-header {{ text-align: center; margin-bottom: 40px; }}
             .admin-tabs {{ display: flex; gap: 20px; margin-bottom: 40px; border-bottom: 1px solid var(--white-30); }}
@@ -1020,6 +1022,22 @@ def get_admin():
         </style>
     </head>
     <body>
+        <!-- LOGIN FORM -->
+        <div id="adminLogin" class="login-container" style="display:flex;">
+            <div class="login-box">
+                <h1 style="font-size:1.5rem; margin-bottom:10px; text-align:center; color:var(--white-100);">🔐 ADMIN PANEL</h1>
+                <p style="color:var(--white-60); text-align:center; margin-bottom:30px;">Acceso restringido</p>
+                <div id="blockedMsg" style="display:none; background:rgba(255,0,0,0.1); border:1px solid rgba(255,0,0,0.3); padding:15px; border-radius:8px; margin-bottom:20px; color:var(--accent-red); text-align:center;">⏳ Bloqueado 5 min. Reintentar luego.</div>
+                <form onsubmit="return adminLogin(event)">
+                    <input type="text" id="adminUsr" placeholder="usuario" style="width:100%; padding:10px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); color:var(--white-100); border-radius:4px; margin-bottom:15px; font-family:'Space Mono'; box-sizing:border-box;" required>
+                    <input type="password" id="adminPwd" placeholder="contraseña" style="width:100%; padding:10px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); color:var(--white-100); border-radius:4px; margin-bottom:20px; font-family:'Space Mono'; box-sizing:border-box;" required>
+                    <button type="submit" style="width:100%; padding:10px; background:var(--accent-red); color:#000; border:none; font-weight:bold; cursor:pointer; border-radius:4px; font-family:'Space Mono';">INGRESAR</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- PANEL CONTENT -->
+        <div id="adminPanel" style="display:none;">
         <a href="/" class="back-button">← VOLVER</a>
 
         <div class="page-container">
@@ -1111,8 +1129,70 @@ def get_admin():
                 </div>
             </div>
         </div>
+        </div>
 
         <script>
+        const ADMIN_USER = 'rogerthat';
+        const ADMIN_PASS = 'rogerthat.137';
+        const BLOCK_TIME = 5 * 60 * 1000;
+
+        function checkAdminSession() {{
+            const session = localStorage.getItem('adminSession');
+            const blockTime = localStorage.getItem('adminBlock');
+            const now = Date.now();
+
+            if(blockTime && now < parseInt(blockTime)) {{
+                showBlocked();
+                return;
+            }} else if(blockTime) {{
+                localStorage.removeItem('adminBlock');
+            }}
+
+            if(session && now < parseInt(session)) {{
+                showPanel();
+            }} else {{
+                localStorage.removeItem('adminSession');
+                showLogin();
+            }}
+        }}
+
+        function showLogin() {{
+            document.getElementById('adminLogin').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('blockedMsg').style.display = 'none';
+        }}
+
+        function showPanel() {{
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+        }}
+
+        function showBlocked() {{
+            document.getElementById('adminLogin').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('blockedMsg').style.display = 'block';
+            document.getElementById('adminUsr').disabled = true;
+            document.getElementById('adminPwd').disabled = true;
+        }}
+
+        function adminLogin(e) {{
+            e.preventDefault();
+            const user = document.getElementById('adminUsr').value;
+            const pass = document.getElementById('adminPwd').value;
+
+            if(user === ADMIN_USER && pass === ADMIN_PASS) {{
+                const expiry = Date.now() + (24 * 60 * 60 * 1000);
+                localStorage.setItem('adminSession', expiry);
+                localStorage.removeItem('adminBlock');
+                showPanel();
+            }} else {{
+                localStorage.setItem('adminBlock', Date.now() + BLOCK_TIME);
+                showBlocked();
+                alert('❌ Credenciales inválidas. Bloqueado 5 minutos.');
+            }}
+            return false;
+        }}
+
         function showTab(tabName) {{
             const tabs = document.querySelectorAll('.admin-tab');
             const contents = document.querySelectorAll('.admin-content');
@@ -1124,8 +1204,7 @@ def get_admin():
             document.getElementById(tabName).classList.add('active');
         }}
 
-        // Inicializar panel de auth al cargar
-        updateAuthPanel();
+        checkAdminSession();
         </script>
     </body>
     </html>
