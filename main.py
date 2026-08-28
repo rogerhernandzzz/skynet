@@ -697,7 +697,7 @@ def get_home():
                 <a href="#foro" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">💬</span>
-                    <span class="item-label">Comunidad / Logística</span>
+                    <span class="item-label">Comunidad</span>
                 </a>
                 <a href="/noticias" class="menu-item">
                     <div class="item-circle"></div>
@@ -707,7 +707,7 @@ def get_home():
                 <a href="/trader" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">📈</span>
-                    <span class="item-label">Trader / Inversión</span>
+                    <span class="item-label">Inversión</span>
                 </a>
                 <a href="/perfil" class="menu-item">
                     <div class="item-circle"></div>
