@@ -653,12 +653,12 @@ def get_home():
                 <a href="/trader" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">📈</span>
-                    <span class="item-label">Trader</span>
+                    <span class="item-label">Trader / Inversión</span>
                 </a>
                 <a href="/perfil" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">🤖</span>
-                    <span class="item-label">Yo Cibernético</span>
+                    <span class="item-label">Cibernético</span>
                 </a>
                 <a href="/ia" class="menu-item">
                     <div class="item-circle"></div>
@@ -749,7 +749,7 @@ def get_perfil():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Roger Hernández - Yo Cibernético</title>
+        <title>Roger Hernández - Cibernético</title>
         <style>{CSS_RADIAL}</style>
     </head>
     <body>
