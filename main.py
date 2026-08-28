@@ -626,7 +626,7 @@ def get_home():
                 <a href="/cripto" class="menu-item">
                     <div class="item-circle"></div>
                     <span class="item-icon">⚡</span>
-                    <span class="item-label">Cripto Luz</span>
+                    <span class="item-label">Criptomoneda Luz</span>
                 </a>
                 <a href="#foro" class="menu-item">
                     <div class="item-circle"></div>
