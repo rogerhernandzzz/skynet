@@ -1023,20 +1023,20 @@ def get_ia():
 def register(username: str, email: str, password: str, cedula: str):
     """Registro de nuevo usuario"""
     if not username or not email or not password or not cedula:
-        raise HTTPException(status_code=400, detail="Todos los campos son requeridos")
+        return {"success": False, "message": "Todos los campos son requeridos"}
 
     if len(password) < 8:
-        raise HTTPException(status_code=400, detail="La contraseña debe tener mínimo 8 caracteres")
+        return {"success": False, "message": "La contraseña debe tener mínimo 8 caracteres"}
 
     # Validar duplicados (temporal, sin DB)
     if username in REGISTERED_USERS:
-        raise HTTPException(status_code=409, detail="Username ya existe")
+        return {"success": False, "message": "Username ya existe"}
 
     if email in REGISTERED_EMAILS:
-        raise HTTPException(status_code=409, detail="Email ya está registrado")
+        return {"success": False, "message": "Email ya está registrado"}
 
     if cedula in REGISTERED_CEDULAS:
-        raise HTTPException(status_code=409, detail="Cédula ya está registrada")
+        return {"success": False, "message": "Cédula ya está registrada"}
 
     # En versión futura, guardaría en BD y hashearía password
     # Por ahora, retorna token simulado
@@ -1057,14 +1057,14 @@ def register(username: str, email: str, password: str, cedula: str):
 def login(email: str, password: str):
     """Inicio de sesión"""
     if not email or not password:
-        raise HTTPException(status_code=400, detail="Email y contraseña requeridos")
+        return {"success": False, "message": "Email y contraseña requeridos"}
 
     # Validación temporal (sin BD real)
     if email not in REGISTERED_EMAILS:
-        raise HTTPException(status_code=401, detail="Email no existe")
+        return {"success": False, "message": "Email no existe"}
 
     if len(password) < 8:
-        raise HTTPException(status_code=401, detail="Contraseña inválida")
+        return {"success": False, "message": "Contraseña inválida"}
 
     # En versión futura, verificaría contra BD y hashearía password
     # Por ahora, acepta si está registrado
