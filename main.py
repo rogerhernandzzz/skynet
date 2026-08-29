@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
@@ -26,6 +26,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ===== REGISTRO TEMPORAL (sin DB) =====
+REGISTERED_USERS = set()
+REGISTERED_EMAILS = set()
+REGISTERED_CEDULAS = set()
 
 @app.get("/health")
 def health_check():
@@ -766,9 +771,9 @@ def get_home():
                 }})
                 .then(r => r.json())
                 .then(data => {{
-                    if(data.success) {{
+                    if(data.success && data.token) {{
                         localStorage.setItem('username', username);
-                        localStorage.setItem('token', data.token || 'jwt_token');
+                        localStorage.setItem('token', data.token);
                         alert('✅ Registro exitoso. ¡Bienvenido ' + username + '!');
                         document.getElementById('regUsername').value = '';
                         document.getElementById('regEmail').value = '';
@@ -803,9 +808,9 @@ def get_home():
                 }})
                 .then(r => r.json())
                 .then(data => {{
-                    if(data.success) {{
+                    if(data.success && data.token) {{
                         localStorage.setItem('username', pseudonym);
-                        localStorage.setItem('token', data.token || 'jwt_token');
+                        localStorage.setItem('token', data.token);
                         alert('✅ Ingreso exitoso. ¡Hola ' + pseudonym + '!');
                         document.getElementById('ingPseudonym').value = '';
                         document.getElementById('ingPassword').value = '';
@@ -822,6 +827,7 @@ def get_home():
 
             function logout() {{
                 localStorage.removeItem('username');
+                localStorage.removeItem('token');
                 closePanelUsuario();
                 updateAuthPanel();
             }}
@@ -870,9 +876,10 @@ def get_home():
             updateAuthPanel();
 
             document.addEventListener('click', function(e) {{
-                if (e.target.id === 'registroModal') closeRegistro();
-                if (e.target.id === 'ingresarModal') closeIngresar();
-                if (e.target.id === 'panelUsuarioModal') closePanelUsuario();
+                // Solo cerrar si clickeó el background (el modal padre), no elementos dentro
+                if (e.target === document.getElementById('registroModal')) closeRegistro();
+                if (e.target === document.getElementById('ingresarModal')) closeIngresar();
+                if (e.target === document.getElementById('panelUsuarioModal')) closePanelUsuario();
             }});
         </script>
     </body>
@@ -1016,13 +1023,27 @@ def get_ia():
 def register(username: str, email: str, password: str, cedula: str):
     """Registro de nuevo usuario"""
     if not username or not email or not password or not cedula:
-        return {"success": False, "message": "Todos los campos son requeridos"}
+        raise HTTPException(status_code=400, detail="Todos los campos son requeridos")
 
     if len(password) < 8:
-        return {"success": False, "message": "La contraseña debe tener mínimo 8 caracteres"}
+        raise HTTPException(status_code=400, detail="La contraseña debe tener mínimo 8 caracteres")
+
+    # Validar duplicados (temporal, sin DB)
+    if username in REGISTERED_USERS:
+        raise HTTPException(status_code=409, detail="Username ya existe")
+
+    if email in REGISTERED_EMAILS:
+        raise HTTPException(status_code=409, detail="Email ya está registrado")
+
+    if cedula in REGISTERED_CEDULAS:
+        raise HTTPException(status_code=409, detail="Cédula ya está registrada")
 
     # En versión futura, guardaría en BD y hashearía password
     # Por ahora, retorna token simulado
+    REGISTERED_USERS.add(username)
+    REGISTERED_EMAILS.add(email)
+    REGISTERED_CEDULAS.add(cedula)
+
     token = f"token_{username}_{datetime.now().timestamp()}"
 
     return {
@@ -1036,10 +1057,17 @@ def register(username: str, email: str, password: str, cedula: str):
 def login(email: str, password: str):
     """Inicio de sesión"""
     if not email or not password:
-        return {"success": False, "message": "Email y contraseña requeridos"}
+        raise HTTPException(status_code=400, detail="Email y contraseña requeridos")
 
-    # En versión futura, verificaría contra BD
-    # Por ahora, acepta cualquier credencial
+    # Validación temporal (sin BD real)
+    if email not in REGISTERED_EMAILS:
+        raise HTTPException(status_code=401, detail="Email no existe")
+
+    if len(password) < 8:
+        raise HTTPException(status_code=401, detail="Contraseña inválida")
+
+    # En versión futura, verificaría contra BD y hashearía password
+    # Por ahora, acepta si está registrado
     token = f"token_{email}_{datetime.now().timestamp()}"
 
     return {
@@ -1075,7 +1103,8 @@ def get_admin():
             .login-container {{ display:flex; align-items:center; justify-content:center; min-height:100vh; }}
             .login-box {{ background:linear-gradient(135deg,rgba(18,18,26,.97),rgba(22,22,38,.95)); border:1px solid rgba(108,92,231,.2); backdrop-filter:blur(20px); padding:40px; border-radius:12px; max-width:400px; width:100%; }}
             .admin-container {{ max-width: 1200px; margin: 0 auto; padding: 40px; }}
-            .admin-header {{ text-align: center; margin-bottom: 40px; }}
+            .admin-header {{ text-align: center; margin-bottom: 40px; position: relative; }}
+            .admin-logout {{ position: absolute; top: 0; right: 0; background: var(--accent-red); color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }}
             .admin-tabs {{ display: flex; gap: 20px; margin-bottom: 40px; border-bottom: 1px solid var(--white-30); }}
             .admin-tab {{ padding: 10px 20px; cursor: pointer; border: none; background: transparent; color: var(--white-60); border-bottom: 2px solid transparent; transition: all 0.3s; }}
             .admin-tab.active {{ color: var(--accent-red); border-bottom-color: var(--accent-red); }}
@@ -1116,6 +1145,7 @@ def get_admin():
         <div class="page-container">
             <div class="admin-container">
                 <div class="admin-header">
+                    <button class="admin-logout" onclick="adminLogout()">Salir</button>
                     <h1 style="font-size: 2rem; margin-bottom: 10px;">⚙️ PANEL DE ADMINISTRACIÓN</h1>
                     <p style="color: var(--white-60);">Gestiona usuarios, noticias y el sistema</p>
                 </div>
@@ -1223,6 +1253,12 @@ def get_admin():
 
             if(session && now < parseInt(session)) {{
                 showPanel();
+                // Restaurar tab activo
+                const activeTab = localStorage.getItem('adminTab') || 'usuarios';
+                setTimeout(function() {{
+                    const button = Array.from(document.querySelectorAll('.admin-tab')).find(b => b.textContent.toLowerCase().includes(activeTab));
+                    if(button) showTab(activeTab);
+                }}, 100);
             }} else {{
                 localStorage.removeItem('adminSession');
                 showLogin();
@@ -1275,7 +1311,19 @@ def get_admin():
 
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
+            localStorage.setItem('adminTab', tabName);
         }}
+
+        function adminLogout() {{
+            localStorage.removeItem('adminSession');
+            localStorage.removeItem('adminBlock');
+            localStorage.removeItem('adminTab');
+            showLogin();
+        }}
+
+        window.addEventListener('load', function() {{
+            checkAdminSession();
+        }});
 
         checkAdminSession();
         </script>
